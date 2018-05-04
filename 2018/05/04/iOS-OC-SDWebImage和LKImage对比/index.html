@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="Hexo, NexT" />
+  <meta name="keywords" content="iOS,图片,SDWebImage,LKImageKit," />
 
 
 
@@ -80,13 +80,14 @@
 
 
 <meta name="description" content="0x0背景LKImageKit是腾讯开源的一个高性能图片加载框架，虽然第一时间下载了源码，但是只是简单的看了框架，没有细致的研读源码。最近空闲下来，学习了一下LKImageKit源码，其中有很多巧妙的实现。本文将通过1张图片的加载流程，对比两个图片框架。 0x1正文LKImageKit和SDWebImage分别选用了两种不同的图片加载方案。LKImageKit的图片加载是提供了一个LKImageV">
+<meta name="keywords" content="iOS,图片,SDWebImage,LKImageKit">
 <meta property="og:type" content="article">
 <meta property="og:title" content="[iOS&#x2F;OC]SDWebImage和LKImage对比">
 <meta property="og:url" content="http://yoursite.com/2018/05/04/iOS-OC-SDWebImage和LKImage对比/index.html">
 <meta property="og:site_name" content="LululuSir的博客">
 <meta property="og:description" content="0x0背景LKImageKit是腾讯开源的一个高性能图片加载框架，虽然第一时间下载了源码，但是只是简单的看了框架，没有细致的研读源码。最近空闲下来，学习了一下LKImageKit源码，其中有很多巧妙的实现。本文将通过1张图片的加载流程，对比两个图片框架。 0x1正文LKImageKit和SDWebImage分别选用了两种不同的图片加载方案。LKImageKit的图片加载是提供了一个LKImageV">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2018-05-04T07:42:15.465Z">
+<meta property="og:updated_time" content="2018-05-04T10:06:29.966Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="[iOS&#x2F;OC]SDWebImage和LKImage对比">
 <meta name="twitter:description" content="0x0背景LKImageKit是腾讯开源的一个高性能图片加载框架，虽然第一时间下载了源码，但是只是简单的看了框架，没有细致的研读源码。最近空闲下来，学习了一下LKImageKit源码，其中有很多巧妙的实现。本文将通过1张图片的加载流程，对比两个图片框架。 0x1正文LKImageKit和SDWebImage分别选用了两种不同的图片加载方案。LKImageKit的图片加载是提供了一个LKImageV">
@@ -160,7 +161,7 @@
       </a>
     </div>
       
-        <p class="site-subtitle"></p>
+        <p class="site-subtitle">iOS开发</p>
       
   </div>
 
@@ -186,6 +187,16 @@
               <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
             
             Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            Tags
           </a>
         </li>
       
@@ -341,6 +352,18 @@
 
     <footer class="post-footer">
       
+        <div class="post-tags">
+          
+            <a href="/tags/iOS/" rel="tag"># iOS</a>
+          
+            <a href="/tags/图片/" rel="tag"># 图片</a>
+          
+            <a href="/tags/SDWebImage/" rel="tag"># SDWebImage</a>
+          
+            <a href="/tags/LKImageKit/" rel="tag"># LKImageKit</a>
+          
+        </div>
+      
 
       
       
@@ -428,6 +451,10 @@
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
+              <img class="site-author-image" itemprop="image"
+                src="/images/avatar.gif"
+                alt="鲁强" />
+            
               <p class="site-author-name" itemprop="name">鲁强</p>
               <p class="site-description motion-element" itemprop="description"></p>
           </div>
@@ -448,17 +475,56 @@
             
 
             
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">6</span>
+                  <span class="site-state-item-name">tags</span>
+                
+              </div>
+            
 
           </nav>
 
           
 
           
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/LululuSir" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="mailto:05050314@163.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  </span>
+                
+            </div>
+          
 
           
           
 
           
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-block">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                Links
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://dreampiggy.com/" title="dreampiggy" target="_blank">dreampiggy</a>
+                  </li>
+                
+              </ul>
+            </div>
           
 
           
