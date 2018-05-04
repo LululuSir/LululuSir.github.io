@@ -1,0 +1,890 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="0x0背景今年年初，2月份左右，有业务同学反馈，有1张APNG动图，在其他系统上都OK，单单在iOS10.3.3上不动。特别迷，花了一下午的时间排查这个问题。最终咨询了@DreamPiggy ，才把这个问题搞清楚。 0x1原因APNG的数据块有IHDR、acTL、fcTL、IDAT、fdAT等类型。每帧APNG的图像由1个FCTL，&amp;gt;=1个(通常是1~2个)IDAT图像组成。其中FCTL是每">
+<meta property="og:type" content="article">
+<meta property="og:title" content="[iOS&#x2F;OC]iOS10.3.3上APNG不动">
+<meta property="og:url" content="http://yoursite.com/2018/05/04/iOS-OC-iOS10-3-3上APNG不动/index.html">
+<meta property="og:site_name" content="LululuSir的博客">
+<meta property="og:description" content="0x0背景今年年初，2月份左右，有业务同学反馈，有1张APNG动图，在其他系统上都OK，单单在iOS10.3.3上不动。特别迷，花了一下午的时间排查这个问题。最终咨询了@DreamPiggy ，才把这个问题搞清楚。 0x1原因APNG的数据块有IHDR、acTL、fcTL、IDAT、fdAT等类型。每帧APNG的图像由1个FCTL，&amp;gt;=1个(通常是1~2个)IDAT图像组成。其中FCTL是每">
+<meta property="og:locale" content="default">
+<meta property="og:image" content="https://monkeytest.oss-cn-shanghai.aliyuncs.com/blog/apng%E7%BB%93%E6%9E%84%E5%9B%BE.png">
+<meta property="og:image" content="https://monkeytest.oss-cn-shanghai.aliyuncs.com/blog/APNG%E6%A0%BC%E5%BC%8F%E7%AD%BE%E5%90%8D.png">
+<meta property="og:image" content="https://monkeytest.oss-cn-shanghai.aliyuncs.com/blog/APNGChunk.png">
+<meta property="og:updated_time" content="2018-05-04T08:54:20.003Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="[iOS&#x2F;OC]iOS10.3.3上APNG不动">
+<meta name="twitter:description" content="0x0背景今年年初，2月份左右，有业务同学反馈，有1张APNG动图，在其他系统上都OK，单单在iOS10.3.3上不动。特别迷，花了一下午的时间排查这个问题。最终咨询了@DreamPiggy ，才把这个问题搞清楚。 0x1原因APNG的数据块有IHDR、acTL、fcTL、IDAT、fdAT等类型。每帧APNG的图像由1个FCTL，&amp;gt;=1个(通常是1~2个)IDAT图像组成。其中FCTL是每">
+<meta name="twitter:image" content="https://monkeytest.oss-cn-shanghai.aliyuncs.com/blog/apng%E7%BB%93%E6%9E%84%E5%9B%BE.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/05/04/iOS-OC-iOS10-3-3上APNG不动/"/>
+
+
+
+
+
+  <title>[iOS/OC]iOS10.3.3上APNG不动 | LululuSir的博客</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="default">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">LululuSir的博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archives
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/05/04/iOS-OC-iOS10-3-3上APNG不动/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="鲁强">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="LululuSir的博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">[iOS/OC]iOS10.3.3上APNG不动</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-05-04T16:12:50+08:00">
+                2018-05-04
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="0x0背景"><a href="#0x0背景" class="headerlink" title="0x0背景"></a>0x0背景</h2><p>今年年初，2月份左右，有业务同学反馈，有1张APNG动图，在其他系统上都OK，单单在iOS10.3.3上不动。特别迷，花了一下午的时间排查这个问题。最终咨询了@DreamPiggy ，才把这个问题搞清楚。</p>
+<h2 id="0x1原因"><a href="#0x1原因" class="headerlink" title="0x1原因"></a>0x1原因</h2><p>APNG的数据块有IHDR、acTL、fcTL、IDAT、fdAT等类型。每帧APNG的图像由1个FCTL，&gt;=1个(通常是1~2个)IDAT图像组成。其中FCTL是每帧的控制信息，IDAT是图像信息。在iOS10.3.3系统中，当每帧APNG的fdAT&gt;=3时，系统解码会出错，导致解码失败，并取第一帧信息作为解码结果，即展示PNG静图。</p>
+<p>简单的说，即：<br>iOS 10.3.3系统BUG，在APNG较大且较复杂时，APNG解码失败，返回首帧PNG静图。</p>
+<h2 id="0x2APNG"><a href="#0x2APNG" class="headerlink" title="0x2APNG"></a>0x2APNG</h2><p>分析过程中，第一步就是查询APNG的标准，发现这块文档十分匮乏，尤其是中文文档。在此，按个人理解整理一份。</p>
+<h3 id="1-APNG结构"><a href="#1-APNG结构" class="headerlink" title="1.APNG结构"></a>1.APNG结构</h3><p>一个流传甚广的图如下。PNG的基本结构是PNG签名(PNG Signature)+图像头(IHDR)+数据块(IDAT)+结束块(IEND)，4部分组成，而APNG则是在此基础上扩展，主要是增加了acTL控制块保存整体动图控制信息，将N张图片的IDAT取出来作为每一帧的信息，并在每一帧增加fcTL控制卡保存每帧图像的控制信息。</p>
+<p><img src="https://monkeytest.oss-cn-shanghai.aliyuncs.com/blog/apng%E7%BB%93%E6%9E%84%E5%9B%BE.png" alt="image"></p>
+<h3 id="2-手工解码APNG"><a href="#2-手工解码APNG" class="headerlink" title="2.手工解码APNG"></a>2.手工解码APNG</h3><p>只知道APNG的结构，当出现APNG相关问题的时候，你还是不知道是怎么回事。下面我以上面有问题的APNG为例，手工解码APNG。从结构上分，APNG有PNG签名、数据块，两种类型。</p>
+<h4 id="1）PNG签名"><a href="#1）PNG签名" class="headerlink" title="1）PNG签名"></a>1）PNG签名</h4><p>整个文件的前8个byte是PNG签名头，为8950 4e47 0d0a 1a0a，将这8个byte转为ascii就是PNG</p>
+<p><img src="https://monkeytest.oss-cn-shanghai.aliyuncs.com/blog/APNG%E6%A0%BC%E5%BC%8F%E7%AD%BE%E5%90%8D.png" alt="image"></p>
+<h4 id="2）数据块类型"><a href="#2）数据块类型" class="headerlink" title="2）数据块类型"></a>2）数据块类型</h4><p>数据块(chunk)常见类型有：IHDR、acTL、fcTL、IDAT、fdAT、IEND</p>
+<p>基本格式如下：</p>
+<table>
+<thead>
+<tr>
+<th>序号</th>
+<th style="text-align:right">描述</th>
+<th style="text-align:center">长度(byte)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td style="text-align:right">chunk内容长度</td>
+<td style="text-align:center">4</td>
+</tr>
+<tr>
+<td>2</td>
+<td style="text-align:right">chunk类型</td>
+<td style="text-align:center">4</td>
+</tr>
+<tr>
+<td>3</td>
+<td style="text-align:right">chunk内容</td>
+<td style="text-align:center">由1chunk内容长度决定</td>
+</tr>
+<tr>
+<td>4</td>
+<td style="text-align:right">校验码</td>
+<td style="text-align:center">4</td>
+</tr>
+</tbody>
+</table>
+<p>其中chunk类型将其由hex转为ascii，即为对应的值，如：<br><img src="https://monkeytest.oss-cn-shanghai.aliyuncs.com/blog/APNGChunk.png" alt="image"></p>
+<p>①IHDR</p>
+<table>
+<thead>
+<tr>
+<th>长度(byte)</th>
+<th style="text-align:right">内容</th>
+<th style="text-align:center">意义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>4</td>
+<td style="text-align:right">0000 000d</td>
+<td style="text-align:center">chunk内容长度为13 byte</td>
+</tr>
+<tr>
+<td>4</td>
+<td style="text-align:right">4948 4452</td>
+<td style="text-align:center">IDHR</td>
+</tr>
+<tr>
+<td>13</td>
+<td style="text-align:right">0000 0465 0000 01ea 0806 0000 00</td>
+<td style="text-align:center">见下标</td>
+</tr>
+<tr>
+<td>4</td>
+<td style="text-align:right">ad34 f3f4</td>
+<td style="text-align:center">校验码</td>
+</tr>
+</tbody>
+</table>
+<p>IHDR的内容意义如下：</p>
+<table>
+<thead>
+<tr>
+<th>描述</th>
+<th style="text-align:right">长度(byte)</th>
+<th style="text-align:center">内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>图片宽度</td>
+<td style="text-align:right">4 byte</td>
+<td style="text-align:center">0000 0465</td>
+</tr>
+<tr>
+<td>图片高度</td>
+<td style="text-align:right">4 byte</td>
+<td style="text-align:center">0000 01ea</td>
+</tr>
+<tr>
+<td>图像深度</td>
+<td style="text-align:right">1 byte</td>
+<td style="text-align:center">8</td>
+</tr>
+<tr>
+<td>颜色类型</td>
+<td style="text-align:right">1 byte</td>
+<td style="text-align:center">6</td>
+</tr>
+<tr>
+<td>压缩方法</td>
+<td style="text-align:right">1 byte</td>
+<td style="text-align:center">0</td>
+</tr>
+<tr>
+<td>过滤方式</td>
+<td style="text-align:right">1 byte</td>
+<td style="text-align:center">0</td>
+</tr>
+<tr>
+<td>扫描方式</td>
+<td style="text-align:right">1 byte</td>
+<td style="text-align:center">0</td>
+</tr>
+</tbody>
+</table>
+<p>②acTL</p>
+<table>
+<thead>
+<tr>
+<th>长度</th>
+<th style="text-align:right">内容</th>
+<th style="text-align:center">意义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>4 byte</td>
+<td style="text-align:right">0000 0008</td>
+<td style="text-align:center">chunk内容长度为8 byte</td>
+</tr>
+<tr>
+<td>4 byte</td>
+<td style="text-align:right">6163 544c</td>
+<td style="text-align:center">acTL</td>
+</tr>
+<tr>
+<td>8 byte</td>
+<td style="text-align:right">0000 000a 0000 0000</td>
+<td style="text-align:center">前4byte为帧数，10帧；后4byte为循环次数，无限循环；</td>
+</tr>
+<tr>
+<td>4 byte</td>
+<td style="text-align:right">ad34 f3f4</td>
+<td style="text-align:center">校验码</td>
+</tr>
+</tbody>
+</table>
+<p>③fcTL</p>
+<table>
+<thead>
+<tr>
+<th>长度</th>
+<th style="text-align:right">内容</th>
+<th style="text-align:center">意义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>4 byte</td>
+<td style="text-align:right">0000 001a</td>
+<td style="text-align:center">chunk内容长度为26 byte</td>
+</tr>
+<tr>
+<td>4 byte</td>
+<td style="text-align:right">6663 544c</td>
+<td style="text-align:center">fcTL</td>
+</tr>
+<tr>
+<td>26 byte</td>
+<td style="text-align:right">00 0000 0000 0004 6500 0001 ea00 0000 0000 0000 0000 0c00 6400 00</td>
+<td style="text-align:center">略</td>
+</tr>
+<tr>
+<td>4 byte</td>
+<td style="text-align:right">50 8aec fb</td>
+<td style="text-align:center">校验码</td>
+</tr>
+</tbody>
+</table>
+<p>④IDAT</p>
+<table>
+<thead>
+<tr>
+<th>长度</th>
+<th style="text-align:right">内容</th>
+<th style="text-align:center">意义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>4 byte</td>
+<td style="text-align:right">00 0080 00</td>
+<td style="text-align:center">chunk内容长度为32768 byte</td>
+</tr>
+<tr>
+<td>4 byte</td>
+<td style="text-align:right">4944 4154</td>
+<td style="text-align:center">IDAT</td>
+</tr>
+<tr>
+<td>32768 byte</td>
+<td style="text-align:right">略</td>
+<td style="text-align:center">略</td>
+</tr>
+<tr>
+<td>4 byte</td>
+<td style="text-align:right">876e ca46</td>
+<td style="text-align:center">校验码</td>
+</tr>
+</tbody>
+</table>
+<h4 id="3）数据块类型补充"><a href="#3）数据块类型补充" class="headerlink" title="3）数据块类型补充"></a>3）数据块类型补充</h4><p>在动图中，第1帧称为关键帧，其他帧信息在压缩算法下需要有第1帧计算得来。在APNG中，关键帧就是IDAT，第2帧开始为fdAT。</p>
+<p>根据数据块类型可知，通常37byte开始，为acTL数据块，可以以此作为是否为APNG的标识。但是这个不是强制的，你也可以自己定义数据块类型，在IHDR之后添加相应信息。</p>
+<p>例如，为APNG添加了签名和时间戳后，在Safari下显示是正常的，在Chrome下就无法正常加载。即：Chrome和Safari对于APNG的标准解读不同，且明显Chrome对APNG的标准支持不完善。</p>
+<h3 id="3-参考文章"><a href="#3-参考文章" class="headerlink" title="3.参考文章"></a>3.参考文章</h3><p>PNG规范中文解读：<a href="https://cloud.tencent.com/developer/article/1004932" target="_blank" rel="noopener">png的故事：获取图片信息和像素内容</a></p>
+<p>PNG标准英文文档：<a href="http://www.libpng.org/pub/png/spec/1.2/PNG-Contents.html" target="_blank" rel="noopener">PNG (Portable Network Graphics) Specification, Version 1.2</a><br>APNG标准英文文档：<a href="https://wiki.mozilla.org/APNG_Specification#.60acTL.60:_The_Animation_Control_Chunk" target="_blank" rel="noopener">APNG Specification</a><br>APNG介绍：<a href="https://aotu.io/notes/2016/11/07/apng/" target="_blank" rel="noopener">APNG那些事</a></p>
+<p>APNG分析网站：<a href="https://animatedpngs.com/" target="_blank" rel="noopener">https://animatedpngs.com/</a><br>HEX转ascii网站：<a href="https://www.rapidtables.com/convert/number/hex-to-ascii.html" target="_blank" rel="noopener">https://www.rapidtables.com/convert/number/hex-to-ascii.html</a></p>
+<h2 id="0x3问题分析"><a href="#0x3问题分析" class="headerlink" title="0x3问题分析"></a>0x3问题分析</h2><h3 id="1-分析图片数据"><a href="#1-分析图片数据" class="headerlink" title="1.分析图片数据"></a>1.分析图片数据</h3><p>在有以上的对APNG的知识储备后，就可以开始进行正式的问题分析了。</p>
+<p>对多组图片手动解码，分析fdAT数据发现，fdAT在同一帧中连续3次或以上，会导致在iOS10.3.3上解码失败。结论以猜测为主，部分证实，暂无实锤。相关数据就不放了。有兴趣的同学可以自己解析一下看看。</p>
+<h3 id="2-ImageIO的符号断点"><a href="#2-ImageIO的符号断点" class="headerlink" title="2.ImageIO的符号断点"></a>2.ImageIO的符号断点</h3><p>ImageIO有一个LogDebug函数，添加符号断点后，可以断到这个符号，侧面印证了此时系统APNG解码失败。</p>
+<h2 id="0x4总结"><a href="#0x4总结" class="headerlink" title="0x4总结"></a>0x4总结</h2><p>有必要总结下。各大厂对图片格式的解读是不一致的，尤其是在动图上，在一些特定场景下就会踩坑。目前我已知的有：</p>
+<blockquote>
+<p>1.本文的问题，APNG的fdAT&gt;=3时，苹果系统(iOS/mac os)解码失败，变为静图；<br>2.APNG添加签名后，Android解码失败，无法展示；<br>3.安卓和苹果对GIF的循环次数理解不一致，通常可以在苹果解GIF时循环次数加1，以保持多端一致；  </p>
+</blockquote>
+<p>其他隐藏的坑不知道还有多少。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/05/04/iOS-OC-platform-memmove的Crash/" rel="next" title="[iOS/OC]platform_memmove的Crash">
+                <i class="fa fa-chevron-left"></i> [iOS/OC]platform_memmove的Crash
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">鲁强</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">4</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#0x0背景"><span class="nav-number">1.</span> <span class="nav-text">0x0背景</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#0x1原因"><span class="nav-number">2.</span> <span class="nav-text">0x1原因</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#0x2APNG"><span class="nav-number">3.</span> <span class="nav-text">0x2APNG</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-APNG结构"><span class="nav-number">3.1.</span> <span class="nav-text">1.APNG结构</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-手工解码APNG"><span class="nav-number">3.2.</span> <span class="nav-text">2.手工解码APNG</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1）PNG签名"><span class="nav-number">3.2.1.</span> <span class="nav-text">1）PNG签名</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2）数据块类型"><span class="nav-number">3.2.2.</span> <span class="nav-text">2）数据块类型</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3）数据块类型补充"><span class="nav-number">3.2.3.</span> <span class="nav-text">3）数据块类型补充</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-参考文章"><span class="nav-number">3.3.</span> <span class="nav-text">3.参考文章</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#0x3问题分析"><span class="nav-number">4.</span> <span class="nav-text">0x3问题分析</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-分析图片数据"><span class="nav-number">4.1.</span> <span class="nav-text">1.分析图片数据</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-ImageIO的符号断点"><span class="nav-number">4.2.</span> <span class="nav-text">2.ImageIO的符号断点</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#0x4总结"><span class="nav-number">5.</span> <span class="nav-text">0x4总结</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">鲁强</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
