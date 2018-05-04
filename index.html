@@ -229,6 +229,138 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/05/04/iOS-OC-platform-memmove的Crash/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="鲁强">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="LululuSir的博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/05/04/iOS-OC-platform-memmove的Crash/" itemprop="url">[iOS/OC]platform_memmove的Crash</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-05-04T15:45:36+08:00">
+                2018-05-04
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="0x0-背景"><a href="#0x0-背景" class="headerlink" title="0x0 背景"></a>0x0 背景</h2><p>这个问题是今年1月底排查的，gif/apng动图播放时在iOS11以下会小概率闪退。是个比较有趣的Crash，重新记录一下。</p>
+<p>典型堆栈：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">#13. Crashed: PINAnimatedImage disk write queue</span><br><span class="line">0  libsystem_platform.dylib       0x1915d4e60 _platform_memmove + 96</span><br><span class="line">1  ImageIO                        0x1943c0a74 GIFReadPlugin::copyImageBlockSet(InfoRec*, CGImageProvider*, CGRect, CGSize, __CFDictionary const*) + 3192</span><br><span class="line">2  ImageIO                        0x1943c0a74 GIFReadPlugin::copyImageBlockSet(InfoRec*, CGImageProvider*, CGRect, CGSize, __CFDictionary const*) + 3192</span><br><span class="line">3  ImageIO                        0x1943bf7c4 GIFReadPlugin::CopyImageBlockSetProc(void*, CGImageProvider*, CGRect, CGSize, __CFDictionary const*) + 124</span><br><span class="line">4  ImageIO                        0x19422073c IIOImageProviderInfo::copyImageBlockSetWithOptions(CGImageProvider*, CGRect, CGSize, __CFDictionary const*) + 496</span><br><span class="line">5  ImageIO                        0x19421e640 IIOImageProviderInfo::CopyImageBlockSetWithOptions(void*, CGImageProvider*, CGRect, CGSize, __CFDictionary const*) + 356</span><br><span class="line">6  CoreGraphics                   0x1939eeb24 CGImageProviderCopyImageBlockSet + 220</span><br><span class="line">7  CoreGraphics                   0x193c833ac imageProvider_getBytes + 88</span><br><span class="line">8  CoreGraphics                   0x193ab30e0 CGDataProviderCopyData + 280</span><br><span class="line">9  Pinterest                      0x100a46238 __94+[PINAnimatedImageManager processAnimatedImage:temporaryDirectory:infoCompletion:decodedPath:]_block_invoke.225 (PINAnimatedImageManager.m:397)</span><br><span class="line">10 libdispatch.dylib              0x1913d21fc _dispatch_call_block_and_release + 24</span><br><span class="line">11 libdispatch.dylib              0x1913d21bc _dispatch_client_callout + 16</span><br><span class="line">12 libdispatch.dylib              0x1913e012c _dispatch_queue_serial_drain + 240</span><br><span class="line">13 libdispatch.dylib              0x1913d59a4 _dispatch_queue_invoke + 652</span><br><span class="line">14 libdispatch.dylib              0x1913e08d8 _dispatch_queue_override_invoke + 360</span><br><span class="line">15 libdispatch.dylib              0x1913e234c _dispatch_root_queue_drain + 572</span><br><span class="line">16 libdispatch.dylib              0x1913e20ac _dispatch_worker_thread3 + 124</span><br><span class="line">17 libsystem_pthread.dylib        0x1915db2a0 _pthread_wqthread + 1288</span><br><span class="line">18 libsystem_pthread.dylib        0x1915dad8c start_wqthread + 4</span><br></pre></td></tr></table></figure>
+<p><a href="http://www.openradar.me/30196911#ag9zfm9wZW5yYWRhci1ocmRyFAsSB0NvbW1lbnQYgICAqIqs6ggM" target="_blank" rel="noopener">openradar的问题链接</a></p>
+<p><a href="https://github.com/rs/SDWebImage/issues/1484" target="_blank" rel="noopener">SDWebImage的问题链接</a></p>
+<p>该问题在Google上能搜到的结果还是不少的，但是有效信息很少。比较有用的是openradar上提到的iOS10.3beta上已经修复了该问题。可以略微松一口气，最不济可以甩锅给苹果了。甚至如果你的APP只支持iOS11(可能性不大，但是万一有呢)，都可以直接忽略了。</p>
+<h2 id="0x1-Crash原因"><a href="#0x1-Crash原因" class="headerlink" title="0x1 Crash原因"></a>0x1 Crash原因</h2><p>虽然是系统的BUG，但是还是要搞清楚Crash的原因，尽量在业务代码上避免该问题引发其他的风险。排查过程比较艰辛，只说最终结果吧：</p>
+<blockquote>
+<p>CGContextDrawImage();不再保证对imageRef的原子操作。<br>当对于1个imageRef，有多个线程并发绘制时，会触发buffer的memcmp的Crash</p>
+</blockquote>
+<p>根据问题原因可以知道，其实该Crash在多线程同时解码同1份imageRef时才会Crash，因此如果没有引入SDWebImage/YYImage等三方图片库，系统默认主线程解码是不会有改Crash的。</p>
+<p>另外，静图解码也是有概率Crash，但是网上反馈比较少，主要原因也是概率的问题。和一般的多线程Crash一样，次数多了概率才打，在相同的业务场景下，动图解码的频次远高于静图，因此动图更容易触发该Crash。</p>
+<h2 id="0x2-Crash防护"><a href="#0x2-Crash防护" class="headerlink" title="0x2 Crash防护"></a>0x2 Crash防护</h2><p>知道Crash原因后，防护相对就比较简单了，只要保证不会对同一个image资源同时解码就可以了。1个简单的方法是在解码时，使用UIImage作为input，对UIImage进行多线程保护。如：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">@synchronized(image) &#123;</span><br><span class="line">    return [self decodedImageWithCGImageRef:image.CGImage];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/05/04/iOS-OC-SDWebImage和LKImage对比/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -528,7 +660,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">2</span>
+                  <span class="site-state-item-count">3</span>
                   <span class="site-state-item-name">posts</span>
                 </a>
               </div>
