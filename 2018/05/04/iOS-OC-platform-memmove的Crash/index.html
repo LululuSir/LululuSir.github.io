@@ -464,9 +464,6 @@
 
           
 
-    
-    <div id="gitalk-container">
-    </div>
   
   
 
@@ -789,27 +786,27 @@
 
 
   
-  
+    //_config.yml文件若没有添加enable: true可删除该判断
 
-    
+          
       <link rel='stylesheet' href="https://unpkg.com/gitalk/dist/gitalk.css">
       <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
-      <script src="http://cdn.bootcss.com/blueimp-md5/1.1.0/js/md5.min.js"></script>
       <script type="text/javascript">
           var gitalk = new Gitalk({
             clientID:  'ebb8dbf796b2ba354737', 
             clientSecret: 'fc00e5bd53e2903b02ef5eacfa84456138cba8b4',
-            id: md5(window.location.pathname),
-            repo: 'https://github.com/LululuSir/blog.git', 
+            id: window.location.pathname,
+            repo: 'https://github.com/LululuSir/LululuSir.github.io.git', 
             owner: 'LululuSir', 
             admin: 'LululuSir', 
             distractionFreeMode: 'true',
           })
-          gitalk.render('gitalk-container')
+          gitalk.render('gitalk_container')
       </script>
     
 
   
+
 
 
   
